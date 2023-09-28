@@ -5,5 +5,4 @@ repositories {
 
 dependencies {
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
