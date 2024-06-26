@@ -15,14 +15,18 @@ static int const MAX_THUMBNAIL_SIZE = 320;
 #pragma mark "API"
 - (void)pluginInitialize {
     NSString* appId = [[self.commandDelegate settings] objectForKey:@"wechatappid"];
-    
     NSString* universalLink = [[self.commandDelegate settings] objectForKey:@"universallink"];
     
     if (appId && ![appId isEqualToString:self.wechatAppId]) {
         self.wechatAppId = appId;
         [WXApi registerApp: appId universalLink: universalLink];
+        // Register the handleOpenURL selector to handle async notifications coming from the WXAPI.
+        // When we receive an async notification, self.handleOpenURL will call WXApi.handleOpenURL,
+        // which will in turn call self.onResp which is responsible for sending the plugin result
+        // to the native app.
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURL:) name:CDVPluginHandleOpenURLNotification object:nil];
         
-        NSLog(@"cordova-plugin-wechat has been initialized. Wechat SDK Version: %@. APP_ID: %@.", [WXApi getApiVersion], appId);
+        NSLog(@"cordova-plugin-wechat has been initialized. Wechat SDK Version: %@. WECHATAPPID: %@. UNIVERSALLINK: %@", [WXApi getApiVersion], appId, universalLink);
     }
 
     sharedWechatPlugin = self;
@@ -352,7 +356,6 @@ static int const MAX_THUMBNAIL_SIZE = 320;
                          @"lang": authResp.lang != nil ? authResp.lang : @"",
                          @"country": authResp.country != nil ? authResp.country : @"",
                          };
-
             CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
 
             [self.commandDelegate sendPluginResult:commandResult callbackId:self.currentCallbackId];
