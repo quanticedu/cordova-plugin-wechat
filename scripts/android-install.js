@@ -65,7 +65,7 @@ module.exports = function (context) {
 
     console.log(targetDir);
 
-    var targetFiles = ["EntryActivity.java", "WXEntryActivity.java", "WXPayEntryActivity.java"];
+    var targetFiles = ["WXEntryActivity.java"];
 
     if (['after_plugin_add', 'after_plugin_install'].indexOf(context.hook) === -1) {
         // remove it?

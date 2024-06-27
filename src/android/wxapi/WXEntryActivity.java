@@ -1,4 +1,116 @@
 package xu.li.cordova.wechat.wxapi;
 
-public class WXEntryActivity extends EntryActivity {
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.getcapacitor.BridgeActivity;
+
+import com.tencent.mm.opensdk.constants.ConstantsAPI;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
+import com.tencent.mm.opensdk.modelmsg.ShowMessageFromWX;
+
+import org.apache.cordova.CallbackContext;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import xu.li.cordova.wechat.Wechat;
+
+/**
+ * Created by xu.li<AthenaLightenedMyPath@gmail.com> on 9/1/15.
+ */
+public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Wechat.getWxAPI(this).handleIntent(getIntent(), this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Wechat.getWxAPI(this).handleIntent(intent, this);
+    }
+
+    @Override
+    public void onResp(BaseResp resp) {
+        Log.d(Wechat.TAG, resp.toString());
+
+        CallbackContext ctx = Wechat.getCurrentCallbackContext();
+
+        if (ctx == null) {
+            Log.e(Wechat.TAG, ' Wechat.getCurrentCallbackContext null in onResp!');
+            return;
+        }
+
+        switch (resp.errCode) {
+            case BaseResp.ErrCode.ERR_OK:
+                switch (resp.getType()) {
+                    case ConstantsAPI.COMMAND_SENDAUTH:
+                        auth(resp, ctx);
+                        break;
+                    default:
+                        ctx.success();
+                        break;
+                }
+                break;
+            case BaseResp.ErrCode.ERR_USER_CANCEL:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_USER_CANCEL);
+                break;
+            case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_AUTH_DENIED);
+                break;
+            case BaseResp.ErrCode.ERR_SENT_FAILED:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_SENT_FAILED);
+                break;
+            case BaseResp.ErrCode.ERR_UNSUPPORT:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_UNSUPPORT);
+                break;
+            case BaseResp.ErrCode.ERR_COMM:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_COMMON);
+                break;
+            default:
+                ctx.error(Wechat.ERROR_WECHAT_RESPONSE_UNKNOWN);
+                break;
+        }
+
+        finish();
+    }
+
+    @Override
+    public void onReq(BaseReq req) {
+        // Noop
+        finish();
+    }
+
+    protected void auth(BaseResp resp, CallbackContext context) {
+        SendAuth.Resp res = ((SendAuth.Resp) resp);
+
+        Log.d(Wechat.TAG, res.toString());
+
+        JSONObject response = new JSONObject();
+        try {
+            response.put("code", res.code);
+            response.put("state", res.state);
+            response.put("country", res.country);
+            response.put("lang", res.lang);
+        } catch (JSONException e) {
+            Log.e(Wechat.TAG, e.getMessage());
+        }
+
+        context.success(response);
+    }
 }
