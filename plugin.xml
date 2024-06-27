@@ -81,11 +81,6 @@
 
     <!-- android -->
     <platform name="android">
-        <hook type="after_plugin_add" src="scripts/android-install.js" />
-        <hook type="after_plugin_install" src="scripts/android-install.js" />
-        <hook type="before_plugin_rm" src="scripts/android-install.js" />
-        <hook type="before_plugin_uninstall" src="scripts/android-install.js" />
-
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Wechat">
                 <param name="android-package" value="xu.li.cordova.wechat.Wechat"/>
@@ -127,6 +122,9 @@
 
         <source-file src="src/android/Wechat.java" target-dir="src/xu/li/cordova/wechat" />
         <source-file src="src/android/Util.java" target-dir="src/xu/li/cordova/wechat" />
+        <source-file src="src/android/EntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
+        <source-file src="src/android/WxEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
+        <source-file src="src/android/WxPayEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
     </platform>
 </plugin>

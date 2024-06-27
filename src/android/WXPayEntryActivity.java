@@ -1,4 +1,4 @@
-package __PACKAGE_NAME__.wxapi;
+package com.smartly.hybrid.wxapi;
 
 public class WXPayEntryActivity extends EntryActivity {
 

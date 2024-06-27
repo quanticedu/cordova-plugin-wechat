@@ -1,4 +1,4 @@
-package __PACKAGE_NAME__.wxapi;
+package com.smartly.hybrid.wxapi;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
 import com.tencent.mm.opensdk.modelmsg.ShowMessageFromWX;
-import __PACKAGE_NAME__.MainActivity;
+import com.smartly.hybrid.MainActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
