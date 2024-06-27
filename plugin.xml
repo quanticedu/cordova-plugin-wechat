@@ -110,7 +110,6 @@
         </config-file>
 
         <source-file src="src/android/Wechat.java" target-dir="src/xu/li/cordova/wechat" />
-        <source-file src="src/android/Util.java" target-dir="src/xu/li/cordova/wechat" />
         <source-file src="src/android/wxapi/WXEntryActivity.java" target-dir="src/xu/li/cordova/wechat/wxapi" />
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
     </platform>
