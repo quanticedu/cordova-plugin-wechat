@@ -123,8 +123,8 @@
         <source-file src="src/android/Wechat.java" target-dir="src/xu/li/cordova/wechat" />
         <source-file src="src/android/Util.java" target-dir="src/xu/li/cordova/wechat" />
         <source-file src="src/android/EntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
-        <source-file src="src/android/WxEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
-        <source-file src="src/android/WxPayEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
+        <source-file src="src/android/WXEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
+        <source-file src="src/android/WXPayEntryActivity.java" target-dir="src/xu/li/cordova/wechat" />
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
     </platform>
 </plugin>
