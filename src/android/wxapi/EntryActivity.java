@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.smartly.hybrid.MainActivity;
+import com.getcapacitor.BridgeActivity;
 
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -133,7 +133,7 @@ public class EntryActivity extends Activity implements IWXAPIEventHandler {
     }
 
     protected void startMainActivity() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), BridgeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setPackage(getApplicationContext().getPackageName());
         getApplicationContext().startActivity(intent);
