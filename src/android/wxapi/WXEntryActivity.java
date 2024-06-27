@@ -1,27 +1,17 @@
 package xu.li.cordova.wechat.wxapi;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.getcapacitor.BridgeActivity;
 
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
-import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
-import com.tencent.mm.opensdk.modelmsg.ShowMessageFromWX;
 
 import org.apache.cordova.CallbackContext;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +42,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         CallbackContext ctx = Wechat.getCurrentCallbackContext();
 
         if (ctx == null) {
-            Log.e(Wechat.TAG, ' Wechat.getCurrentCallbackContext null in onResp!');
+            Log.e(Wechat.TAG, "Wechat.getCurrentCallbackContext null in onResp!");
             return;
         }
 
