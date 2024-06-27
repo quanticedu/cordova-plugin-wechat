@@ -1,4 +1,4 @@
-package com.smartly.hybrid.wxapi;
+package xu.li.cordova.wechat.wxapi;
 
 public class WXEntryActivity extends EntryActivity {
 }

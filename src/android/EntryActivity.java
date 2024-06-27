@@ -1,4 +1,4 @@
-package com.smartly.hybrid.wxapi;
+package xu.li.cordova.wechat.wxapi;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.smartly.hybrid.MainActivity;
 
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -17,7 +19,6 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.modelbiz.ChooseCardFromWXCardPackage;
 import com.tencent.mm.opensdk.modelmsg.ShowMessageFromWX;
-import com.smartly.hybrid.MainActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
