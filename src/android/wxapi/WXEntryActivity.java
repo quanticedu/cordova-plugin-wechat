@@ -26,23 +26,23 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Wechat.getWxAPI(this).handleIntent(getIntent(), this);
+        Wechat.wxAPI.handleIntent(getIntent(), this);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Wechat.getWxAPI(this).handleIntent(intent, this);
+        Wechat.wxAPI.handleIntent(getIntent(), this);
     }
 
     @Override
     public void onResp(BaseResp resp) {
         Log.d(Wechat.TAG, resp.toString());
 
-        CallbackContext ctx = Wechat.getCurrentCallbackContext();
+        CallbackContext ctx = Wechat.currentCallbackContext;
 
         if (ctx == null) {
-            Log.e(Wechat.TAG, "Wechat.getCurrentCallbackContext null in onResp!");
+            Log.e(Wechat.TAG, "Wechat.currentCallbackContext null in onResp!");
             return;
         }
 
@@ -50,7 +50,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             case BaseResp.ErrCode.ERR_OK:
                 switch (resp.getType()) {
                     case ConstantsAPI.COMMAND_SENDAUTH:
-                        auth(resp, ctx);
+                        auth(resp);
                         break;
                     default:
                         ctx.success();
@@ -86,7 +86,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         finish();
     }
 
-    protected void auth(BaseResp resp, CallbackContext context) {
+    protected void auth(BaseResp resp) {
         SendAuth.Resp res = ((SendAuth.Resp) resp);
 
         Log.d(Wechat.TAG, res.toString());
@@ -101,6 +101,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             Log.e(Wechat.TAG, e.getMessage());
         }
 
-        context.success(response);
+        Wechat.currentCallbackContext.success(response);
     }
 }

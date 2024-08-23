@@ -23,7 +23,7 @@ public class Wechat extends CordovaPlugin {
 
     public static final String PREFS_NAME = "Cordova.Plugin.Wechat";
     public static final String WXAPPID_PROPERTY_KEY = "wechatappid";
-    
+
     public static final String ERROR_SEND_REQUEST_FAILED = "发送请求失败";
     public static final String ERROR_WECHAT_RESPONSE_COMMON = "普通错误";
     public static final String ERROR_WECHAT_RESPONSE_USER_CANCEL = "用户点击取消并返回";
@@ -32,8 +32,8 @@ public class Wechat extends CordovaPlugin {
     public static final String ERROR_WECHAT_RESPONSE_UNSUPPORT = "微信不支持";
     public static final String ERROR_WECHAT_RESPONSE_UNKNOWN = "未知错误";
 
-    protected static CallbackContext currentCallbackContext;
-    protected static IWXAPI wxAPI;
+    public static CallbackContext currentCallbackContext;
+    public static IWXAPI wxAPI;
     protected static String appId;
     private static Wechat instance;
     private static Activity cordovaActivity;
@@ -48,7 +48,7 @@ public class Wechat extends CordovaPlugin {
         appId = getAppId(preferences);
 
         // init api
-        wxApi = WXAPIFactory.createWXAPI(cordova.getActivity(), appId, true);
+        wxAPI = WXAPIFactory.createWXAPI(cordova.getActivity(), appId, true);
 
         // register the app
         wxAPI.registerApp(appId);
@@ -66,18 +66,12 @@ public class Wechat extends CordovaPlugin {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        currentCallbackContext = null;
+        wxAPI = null;
+        appId = null;
         instance = null;
         cordovaActivity = null;
-    }
-
-    /**
-     * Get weixin api
-     *
-     * @param ctx
-     * @return
-     */
-    public static IWXAPI getWxAPI(Context ctx) {
-        return wxAPI;
+        extinfo = null;
     }
 
     public static void transmitLaunchFromWX(String extinfo) {
@@ -118,7 +112,7 @@ public class Wechat extends CordovaPlugin {
             return sendAuthRequest(args);
         } else if (action.equals("isWXAppInstalled")) {
             return isInstalled();
-        } 
+        }
         return false;
     }
 
