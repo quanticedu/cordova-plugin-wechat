@@ -130,15 +130,19 @@ public class Wechat extends CordovaPlugin {
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, String.format("%s is called. Callback ID: %s.", action, callbackContext.getCallbackId()));
 
+        this.currentCallbackContext = callbackContext;
+
         if (action.equals("sendAuthRequest")) {
-            return sendAuthRequest(args, callbackContext);
+            sendAuthRequest(args);
+            return true;
         } else if (action.equals("isWXAppInstalled")) {
-            return isInstalled(callbackContext);
+            isInstalled();
+            return true;
         } 
         return false;
     }
 
-    protected boolean sendAuthRequest(CordovaArgs args, CallbackContext callbackContext) {
+    protected boolean sendAuthRequest(CordovaArgs args) {
         final IWXAPI api = getWxAPI(cordova.getActivity());
 
         final SendAuth.Req req = new SendAuth.Req();
@@ -156,27 +160,23 @@ public class Wechat extends CordovaPlugin {
             Log.i(TAG, "Auth request has been sent successfully.");
 
             // send no result
-            sendNoResultPluginResult(callbackContext);
+            sendNoResultPluginResult();
         } else {
             Log.i(TAG, "Auth request has been sent unsuccessfully.");
 
             // send error
-            callbackContext.error(ERROR_SEND_REQUEST_FAILED);
+            this.callbackContext.error(ERROR_SEND_REQUEST_FAILED);
         }
-
-        return true;
     }
 
-    protected boolean isInstalled(CallbackContext callbackContext) {
+    protected boolean isInstalled() {
         final IWXAPI api = getWxAPI(cordova.getActivity());
 
         if (!api.isWXAppInstalled()) {
-            callbackContext.success(0);
+            this.callbackContext.success(0);
         } else {
-            callbackContext.success(1);
+            this.callbackContext.success(1);
         }
-
-        return true;
     }
 
     public static String getAppId(CordovaPreferences f_preferences) {
@@ -220,17 +220,14 @@ public class Wechat extends CordovaPlugin {
     }
 
     public static CallbackContext getCurrentCallbackContext() {
-        return currentCallbackContext;
+        return this.currentCallbackContext;
     }
 
-    private void sendNoResultPluginResult(CallbackContext callbackContext) {
-        // save current callback context
-        currentCallbackContext = callbackContext;
-
+    private void sendNoResultPluginResult() {
         // send no result and keep callback
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
-        callbackContext.sendPluginResult(result);
+        this.currentCallbackContext.sendPluginResult(result);
     }
 
 }
