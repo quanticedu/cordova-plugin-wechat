@@ -35,7 +35,6 @@ public class Wechat extends CordovaPlugin {
     protected static CallbackContext currentCallbackContext;
     protected static IWXAPI wxAPI;
     protected static String appId;
-    protected static CordovaPreferences wx_preferences;
     private static Wechat instance;
     private static Activity cordovaActivity;
     private static String extinfo;
@@ -45,13 +44,14 @@ public class Wechat extends CordovaPlugin {
 
         super.pluginInitialize();
 
-        String id = getAppId(preferences);
-
         // save app id
-        saveAppId(cordova.getActivity(), id);
+        appId = getAppId(preferences);
 
         // init api
-        initWXAPI();
+        wxApi = WXAPIFactory.createWXAPI(cordova.getActivity(), appId, true);
+
+        // register the app
+        wxAPI.registerApp(appId);
 
         // 保存引用
         instance = this;
@@ -61,16 +61,6 @@ public class Wechat extends CordovaPlugin {
         }
 
         Log.d(TAG, "plugin initialized.");
-    }
-
-    protected void initWXAPI() {
-        IWXAPI api = getWxAPI(cordova.getActivity());
-        if (wx_preferences == null) {
-            wx_preferences = preferences;
-        }
-        if (api != null) {
-            api.registerApp(getAppId(preferences));
-        }
     }
 
     @Override
@@ -87,14 +77,6 @@ public class Wechat extends CordovaPlugin {
      * @return
      */
     public static IWXAPI getWxAPI(Context ctx) {
-        if (wxAPI == null) {
-            String appId = getSavedAppId(ctx);
-
-            if (!appId.isEmpty()) {
-                wxAPI = WXAPIFactory.createWXAPI(ctx, appId, true);
-            }
-        }
-
         return wxAPI;
     }
 
@@ -130,22 +112,19 @@ public class Wechat extends CordovaPlugin {
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, String.format("%s is called. Callback ID: %s.", action, callbackContext.getCallbackId()));
 
-        this.currentCallbackContext = callbackContext;
+        currentCallbackContext = callbackContext;
 
         if (action.equals("sendAuthRequest")) {
-            sendAuthRequest(args);
-            return true;
+            return sendAuthRequest(args);
         } else if (action.equals("isWXAppInstalled")) {
-            isInstalled();
-            return true;
+            return isInstalled();
         } 
         return false;
     }
 
     protected boolean sendAuthRequest(CordovaArgs args) {
-        final IWXAPI api = getWxAPI(cordova.getActivity());
-
         final SendAuth.Req req = new SendAuth.Req();
+
         try {
             req.scope = args.getString(0);
             req.state = args.getString(1);
@@ -156,78 +135,42 @@ public class Wechat extends CordovaPlugin {
             req.state = "wechat";
         }
 
-        if (api.sendReq(req)) {
+        if (wxAPI.sendReq(req)) {
             Log.i(TAG, "Auth request has been sent successfully.");
 
-            // send no result
-            sendNoResultPluginResult();
+            // send no result and keep callback
+            PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+            result.setKeepCallback(true);
+            currentCallbackContext.sendPluginResult(result);
         } else {
             Log.i(TAG, "Auth request has been sent unsuccessfully.");
 
             // send error
-            this.callbackContext.error(ERROR_SEND_REQUEST_FAILED);
+            currentCallbackContext.error(ERROR_SEND_REQUEST_FAILED);
         }
+
+        return true;
     }
 
     protected boolean isInstalled() {
-        final IWXAPI api = getWxAPI(cordova.getActivity());
-
-        if (!api.isWXAppInstalled()) {
-            this.callbackContext.success(0);
+        if (!wxAPI.isWXAppInstalled()) {
+            currentCallbackContext.success(0);
         } else {
-            this.callbackContext.success(1);
+            currentCallbackContext.success(1);
         }
+        return true;
     }
 
     public static String getAppId(CordovaPreferences f_preferences) {
-        if (appId == null) {
-            if (f_preferences != null) {
-                appId = f_preferences.getString(WXAPPID_PROPERTY_KEY, "");
-            } else if (wx_preferences != null) {
-                appId = wx_preferences.getString(WXAPPID_PROPERTY_KEY, "");
-            }
+        if (appId == null && f_preferences != null) {
+            appId = f_preferences.getString(WXAPPID_PROPERTY_KEY, "");
         }
 
         return appId;
     }
 
-    /**
-     * Get saved app id
-     *
-     * @param ctx
-     * @return
-     */
-    public static String getSavedAppId(Context ctx) {
-        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, 0);
-        return settings.getString(WXAPPID_PROPERTY_KEY, "");
-    }
-
-    /**
-     * Save app id into SharedPreferences
-     *
-     * @param ctx
-     * @param id
-     */
-    public static void saveAppId(Context ctx, String id) {
-        if (id != null && id.isEmpty()) {
-            return;
-        }
-
-        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(WXAPPID_PROPERTY_KEY, id);
-        editor.commit();
-    }
-
     public static CallbackContext getCurrentCallbackContext() {
-        return this.currentCallbackContext;
-    }
-
-    private void sendNoResultPluginResult() {
-        // send no result and keep callback
-        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-        result.setKeepCallback(true);
-        this.currentCallbackContext.sendPluginResult(result);
+        return currentCallbackContext;
     }
 
 }
