@@ -100,17 +100,21 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity
-                android:name="xu.li.cordova.wechat.wxapi.WXEntryActivity"
+                android:name=".wxapi.WXEntryActivityy"
                 android:label="@string/launcher_name"
                 android:exported="true"
                 android:taskAffinity="$PACKAGE_NAME"
                 android:launchMode="singleTask"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar">
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <data android:scheme="$WECHATAPPID"/>
+                </intent-filter>
             </activity>
         </config-file>
 
         <source-file src="src/android/Wechat.java" target-dir="src/xu/li/cordova/wechat" />
-        <source-file src="src/android/wxapi/WXEntryActivity.java" target-dir="src/xu/li/cordova/wechat/wxapi" />
         <framework src="android-build.gradle" custom="true" type="gradleReference" />
     </platform>
 </plugin>
