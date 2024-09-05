@@ -25,6 +25,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(Wechat.TAG, "WXEntryActivity onCreate");
         super.onCreate(savedInstanceState);
         Wechat.wxAPI.handleIntent(getIntent(), this);
     }
