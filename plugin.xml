@@ -93,6 +93,8 @@
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
             <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="${applicationId}.permission.WXEntryActivity"/>
+            <permission android:name="${applicationId}.permission.WXEntryActivity" android:protectionLevel="signature"></permission>
             <queries>
                 <package android:name="com.tencent.mm" />
             </queries>
@@ -105,7 +107,8 @@
                 android:exported="true"
                 android:taskAffinity="$PACKAGE_NAME"
                 android:launchMode="singleTask"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar">
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                android:permission="${applicationId}.permission.WXEntryActivity">
             </activity>
         </config-file>
 
