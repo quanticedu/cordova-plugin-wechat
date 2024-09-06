@@ -38,7 +38,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp resp) {
-        Log.d(Wechat.TAG, resp.toString());
+        Log.d(Wechat.TAG, "onResp is called. Response: %s.", resp.toString());
 
         CallbackContext ctx = Wechat.currentCallbackContext;
 
