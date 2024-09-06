@@ -27,20 +27,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(Wechat.TAG, "WXEntryActivity onCreate");
         super.onCreate(savedInstanceState);
-        Wechat.wxAPI.handleIntent(getIntent(), this);
+        Wechat.getWXAPI().handleIntent(getIntent(), this);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.d(Wechat.TAG, "WXEntryActivity onNewIntent");
         super.onNewIntent(intent);
-        Wechat.wxAPI.handleIntent(getIntent(), this);
+        Wechat.getWXAPI().handleIntent(getIntent(), this);
     }
 
     @Override
     public void onResp(BaseResp resp) {
         Log.d(Wechat.TAG, String.format("onResp is called. Response: %s.", resp.toString()));
 
-        CallbackContext ctx = Wechat.currentCallbackContext;
+        CallbackContext ctx = Wechat.getCurrentCallbackContext();
 
         if (ctx == null) {
             Log.e(Wechat.TAG, "Wechat.currentCallbackContext null in onResp!");
@@ -102,6 +103,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             Log.e(Wechat.TAG, e.getMessage());
         }
 
-        Wechat.currentCallbackContext.success(response);
+        Wechat.getCurrentCallbackContext().success(response);
     }
 }

@@ -59,8 +59,7 @@ public class Wechat extends CordovaPlugin {
         if (extinfo != null) {
             transmitLaunchFromWX(extinfo);
         }
-
-        Log.d(TAG, "plugin initialized.");
+        Log.d(TAG, String.format("cordova-plugin-wechat has been initialized. Wechat SDK Version: %s. WECHATAPPID: %s.", wxAPI.getWXAppSupportAPI(), appId));
     }
 
     @Override
@@ -165,6 +164,10 @@ public class Wechat extends CordovaPlugin {
 
     public static CallbackContext getCurrentCallbackContext() {
         return currentCallbackContext;
+    }
+
+    public static IWXAPI getWXAPI() {
+        return wxAPI;
     }
 
 }
