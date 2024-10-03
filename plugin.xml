@@ -109,6 +109,11 @@
                 android:launchMode="singleTask"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"
                 android:permission="${applicationId}.permission.WXEntryActivity">
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <data android:scheme="$WECHATAPPID"/>
+                </intent-filter>
             </activity>
         </config-file>
 
