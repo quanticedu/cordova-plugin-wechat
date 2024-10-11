@@ -1,8 +1,5 @@
 package xu.li.cordova.wechat;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -11,17 +8,25 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaPreferences;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
+import xu.li.cordova.wechat.wxapi.WXEntryActivity;
 
 public class Wechat extends CordovaPlugin {
 
     public static final String TAG = "Cordova.Plugin.Wechat";
 
-    public static final String PREFS_NAME = "Cordova.Plugin.Wechat";
     public static final String WXAPPID_PROPERTY_KEY = "wechatappid";
 
     public static final String ERROR_SEND_REQUEST_FAILED = "发送请求失败";
@@ -36,13 +41,12 @@ public class Wechat extends CordovaPlugin {
     public static IWXAPI wxAPI;
     protected static String appId;
     private static Wechat instance;
-    private static Activity cordovaActivity;
+    private static AppCompatActivity cordovaActivity;
     private static String extinfo;
 
     @Override
-    protected void pluginInitialize() {
-
-        super.pluginInitialize();
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
 
         // save app id
         appId = getAppId(preferences);
@@ -60,6 +64,16 @@ public class Wechat extends CordovaPlugin {
             transmitLaunchFromWX(extinfo);
         }
         Log.d(TAG, String.format("cordova-plugin-wechat has been initialized. Wechat SDK Version: %s. WECHATAPPID: %s.", wxAPI.getWXAppSupportAPI(), appId));
+
+        // Register the main activity to handle a result from the WXEntryActivity activity
+        cordovaActivity.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    public void onActivityResult(ActivityResult result) {
+                        Log.i(Wechat.TAG, "ActivityResultCallback called");
+                        wxAPI.handleIntent(result.getData(), new WXEntryActivity());
+                    }
+                });
     }
 
     @Override
