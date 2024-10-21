@@ -16,12 +16,7 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
-import xu.li.cordova.wechat.wxapi.WXEntryActivity;
 
 public class Wechat extends CordovaPlugin {
 
@@ -64,16 +59,6 @@ public class Wechat extends CordovaPlugin {
             transmitLaunchFromWX(extinfo);
         }
         Log.d(TAG, String.format("cordova-plugin-wechat has been initialized. Wechat SDK Version: %s. WECHATAPPID: %s.", wxAPI.getWXAppSupportAPI(), appId));
-
-        // Register the main activity to handle a result from the WXEntryActivity activity
-        cordovaActivity.registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    public void onActivityResult(ActivityResult result) {
-                        Log.i(Wechat.TAG, "ActivityResultCallback called");
-                        wxAPI.handleIntent(result.getData(), new WXEntryActivity());
-                    }
-                });
     }
 
     @Override
