@@ -62,10 +62,10 @@
         <source-file src="src/ios/AppDelegate+Wechat.m" />
 
         <!-- Wechat Official -->
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WXApi.h" />
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WXApiObject.h" />
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WechatAuthSDK.h" />
-        <source-file src="src/ios/libs/OpenSDK1.8.6.2/libWeChatSDK.a" framework="true" />
+        <header-file src="src/ios/libs/OpenSDK2.0.4/WXApi.h" />
+        <header-file src="src/ios/libs/OpenSDK2.0.4/WXApiObject.h" />
+        <header-file src="src/ios/libs/OpenSDK2.0.4/WechatAuthSDK.h" />
+        <source-file src="src/ios/libs/OpenSDK2.0.4/libWeChatSDK.a" framework="true" />
 
         <!-- Other required frameworks -->
         <framework src="libz.tbd" />
