@@ -39,6 +39,7 @@
                 <string>weixin</string>
                 <string>wechat</string>
                 <string>weixinULAPI</string>
+                <string>weixinURLParamsAPI</string>
             </array>
         </config-file>
 
@@ -61,14 +62,9 @@
         <header-file src="src/ios/AppDelegate+Wechat.h" />
         <source-file src="src/ios/AppDelegate+Wechat.m" />
 
-        <!-- Wechat Official -->
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WXApi.h" />
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WXApiObject.h" />
-        <header-file src="src/ios/libs/OpenSDK1.8.6.2/WechatAuthSDK.h" />
-        <source-file src="src/ios/libs/OpenSDK1.8.6.2/libWeChatSDK.a" framework="true" />
-
         <!-- Other required frameworks -->
         <framework src="libz.tbd" />
+        <framework src="libz.dylib" weak="true" />
         <framework src="libsqlite3.0.tbd" />
         <framework src="CoreTelephony.framework" />
         <framework src="SystemConfiguration.framework" />
@@ -77,6 +73,16 @@
         <framework src="CoreGraphics.framework" />
         <framework src="Webkit.framework" />
         <framework src="libc++.1.tbd" />
+
+        <!-- Wechat framework -->
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="WechatOpenSDK-XCFramework" spec="~> 2.0.4"/>
+            </pods>
+        </podspec>
     </platform>
 
     <!-- android -->
