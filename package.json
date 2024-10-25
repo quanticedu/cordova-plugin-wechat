@@ -34,9 +34,6 @@
         }
     }
   },
-  "dependencies":{
-    "shelljs": "^0.5.3"
-  },
   "author": "xu.li <AthenaLightenedMyPath@gmail.com>",
   "license": "MIT",
   "bugs": {
