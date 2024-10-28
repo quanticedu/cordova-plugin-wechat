@@ -17,7 +17,6 @@
 
 - (void)isWXAppInstalled:(CDVInvokedUrlCommand *)command;
 - (void)sendAuthRequest:(CDVInvokedUrlCommand *)command;
-- (void)jumpToWechat:(CDVInvokedUrlCommand *)command;
 - (void)openMiniProgram: (CDVInvokedUrlCommand *)command;
 - (BOOL)handleUserActivity:(NSUserActivity *)userActivity;
 - (BOOL)handleWechatOpenURL:(NSURL *)url;
