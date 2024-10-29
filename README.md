@@ -9,33 +9,49 @@ A Capacitor-compatible Cordova plugin, a JS version of Wechat SDK
 
 ## Install
 
-In the appropriate Capacitor directory:
+* Run the following in the appropriate Capacitor directory:
 
-```shell
-yarn add cordova-plugin-wechat@github:quanticedu/cordova-plugin-wechat
-```
+  ```shell
+  yarn add cordova-plugin-wechat@github:quanticedu/cordova-plugin-wechat
+  ```
 
-Configure appropriate variable in `capacitor.config.json`:
+* Configure appropriate variables in `capacitor.config.json`:
 
-```json
-{
-  ...
-  "cordova": {
-    "preferences": {
+  ```json
+  {
+    ...
+    "cordova": {
+      "preferences": {
+        ...
+        "WECHATAPPID": "<your_wechat-app_id>",
+        "UNIVERSALLINK": "<your_universal_link>",
+        ...
+      }
+    },
+    ...
+  }
+  ```
+
+* Run `yarn cap sync` in the appopriate Capacitor directory
+
+### !!!IMPORTANT NOTE FOR ANDROID!!!
+
+* If using a version of Capacitor less than v6.1, the `capacitor:sync:before` hook that executes `./scripts/android-install.js` in this plugin won't get executed automatically. For this reason, we export an `android-install` execute via the `bin` property in this project's `package.json`.
+* In your Capacitor project's `package.json` file, you'll want to manually add a `capacitor:sync:before` hook that executes `android-install`, like so:
+
+  ```json
+    {
       ...
-      "WECHATAPPID": "<your_wechat-app_id>",
-      "UNIVERSALLINK": "<your_universal_link>",
+      "scripts": {
+        ...
+        "capacitor:sync:before": "android-install",
+        ...
+      }
       ...
     }
-  },
-  ...
-}
+  ```
 
-```
-
-```shell
-yarn cap sync
-```
+  * You can choose to commit the resultant `android/app/src/main/java/com/package/name/wxapi/WXEntryActivity.java` to version control, or not. 
 
 ## Usage
 

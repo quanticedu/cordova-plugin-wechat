@@ -1,4 +1,4 @@
-package xu.li.cordova.wechat.wxapi;
+package __PACKAGE_NAME__.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,9 @@ import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import __PACKAGE_NAME__.MainActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONException;
@@ -25,26 +27,40 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(Wechat.TAG, "WXEntryActivity onCreate");
         super.onCreate(savedInstanceState);
-        Wechat.getWXAPI().handleIntent(getIntent(), this);
+
+        IWXAPI api = Wechat.getWxAPI(this);
+
+        if (api == null) {
+            startMainActivity();
+        } else {
+            api.handleIntent(getIntent(), this);
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d(Wechat.TAG, "WXEntryActivity onNewIntent");
         super.onNewIntent(intent);
-        Wechat.getWXAPI().handleIntent(getIntent(), this);
+
+        setIntent(intent);
+
+        IWXAPI api = Wechat.getWxAPI(this);
+        if (api == null) {
+            startMainActivity();
+        } else {
+            api.handleIntent(intent, this);
+        }
+
     }
 
     @Override
     public void onResp(BaseResp resp) {
-        Log.d(Wechat.TAG, String.format("onResp is called. Response: %s.", resp.toString()));
+        Log.d(Wechat.TAG, resp.toString());
 
         CallbackContext ctx = Wechat.getCurrentCallbackContext();
 
         if (ctx == null) {
-            Log.e(Wechat.TAG, "Wechat.currentCallbackContext null in onResp!");
+            startMainActivity();
             return;
         }
 
@@ -88,10 +104,24 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         finish();
     }
 
+    protected void startMainActivity() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setPackage(getApplicationContext().getPackageName());
+        getApplicationContext().startActivity(intent);
+    }
+
     protected void auth(BaseResp resp) {
         SendAuth.Resp res = ((SendAuth.Resp) resp);
 
         Log.d(Wechat.TAG, res.toString());
+
+        // get current callback context
+        CallbackContext ctx = Wechat.getCurrentCallbackContext();
+
+        if (ctx == null) {
+            return;
+        }
 
         JSONObject response = new JSONObject();
         try {
@@ -103,6 +133,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             Log.e(Wechat.TAG, e.getMessage());
         }
 
-        Wechat.getCurrentCallbackContext().success(response);
+        ctx.success(response);
     }
 }
