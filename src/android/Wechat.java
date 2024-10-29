@@ -46,7 +46,7 @@ public class Wechat extends CordovaPlugin {
         // init api
         initWXAPI();
 
-        Log.d(TAG, String.format("cordova-plugin-wechat has been initialized. Wechat SDK Version: %s. WECHATAPPID: %s.", api.getWXAppSupportAPI(), id));
+        Log.d(TAG, String.format("cordova-plugin-wechat has been initialized. Wechat SDK Version: %s. WECHATAPPID: %s.", getWxAPI(cordova.getActivity()).getWXAppSupportAPI(), id));
     }
 
     protected void initWXAPI() {
