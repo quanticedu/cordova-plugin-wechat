@@ -36,7 +36,7 @@ A Capacitor-compatible Cordova plugin, a JS version of Wechat SDK
 
 ### !!!IMPORTANT NOTE FOR ANDROID!!!
 
-* If using a version of Capacitor less than v6.1, the `capacitor:sync:before` hook that executes `./scripts/android-install.js` in this plugin won't get executed automatically. For this reason, we export an `android-install` execute via the `bin` property in this project's `package.json`.
+* If using a version of Capacitor less than v6.1, the `capacitor:sync:before` hook that executes `./scripts/android-install.js` in this plugin won't get executed automatically. For this reason, we export an `android-install` executable in this project's `package.json`.
 * In your Capacitor project's `package.json` file, you'll want to manually add a `capacitor:sync:before` hook that executes `android-install`, like so:
 
   ```json
